@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "regions": ["sin1"],            // <- regione preferita (Singapore). In caso di problemi prova "hnd1" o "icn1".
+  "regions": ["sin1"],
   "functions": {
     "api/v5/[...rest].js": { "runtime": "nodejs18.x" },
     "api/health.js": { "runtime": "nodejs18.x" }
@@ -10,4 +10,3 @@
     { "source": "/health", "destination": "/api/health" }
   ]
 }
-
