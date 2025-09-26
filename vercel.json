@@ -1,10 +1,6 @@
 {
   "version": 2,
   "regions": ["sin1"],
-  "functions": {
-    "api/v5/[...rest].js": { "runtime": "nodejs18.x" },
-    "api/health.js": { "runtime": "nodejs18.x" }
-  },
   "rewrites": [
     { "source": "/v5/(.*)", "destination": "/api/v5/$1" },
     { "source": "/health", "destination": "/api/health" }
