@@ -1,32 +1,22 @@
-// Edge Function per forzare la regione e semplificare il routing
-export const config = { runtime: "edge", regions: ["sin1"] };
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   try {
-    const url = new URL(req.url);
-    const path = url.searchParams.get("path") || "";
-    url.searchParams.delete("path");
-    const qs = url.search ? `?${url.searchParams.toString()}` : "";
-    const upstream = `https://api.bybit.com/v5/${path}${qs}`;
+    // es: /api/proxy?path=market/tickers&category=spot&symbol=BTCUSDT
+    const { path, ...rest } = req.query;
+    if (!path) return res.status(400).json({ error: "missing ?path=" });
+
+    const qs = new URLSearchParams(rest).toString();
+    const upstream = `https://api.bybit.com/v5/${path}${qs ? `?${qs}` : ""}`;
 
     const r = await fetch(upstream, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Vercel-Edge)",
-        "Accept": "application/json"
-      }
+      headers: { "User-Agent": "Mozilla/5.0 (Vercel)", "Accept": "application/json" }
     });
 
-    return new Response(r.body, {
-      status: r.status,
-      headers: {
-        "content-type": r.headers.get("content-type") || "application/json",
-        "Access-Control-Allow-Origin": "*"
-      }
-    });
+    const body = await r.text();
+    res.status(r.status);
+    res.setHeader("content-type", r.headers.get("content-type") || "application/json");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return res.send(body);
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
-      status: 500,
-      headers: { "content-type": "application/json" }
-    });
+    return res.status(500).json({ error: String(e) });
   }
 }
