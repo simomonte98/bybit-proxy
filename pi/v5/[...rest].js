@@ -5,7 +5,10 @@ export default async function handler(req, res) {
     const qs = qsIndex !== -1 ? req.url.slice(qsIndex) : "";
     const upstream = `https://api.bybit.com/v5/${rest}${qs}`;
 
-    const r = await fetch(upstream, { headers: { "User-Agent":"Mozilla/5.0 (Vercel)", "Accept":"application/json" } });
+    const r = await fetch(upstream, {
+      headers: { "User-Agent": "Mozilla/5.0 (Vercel)", "Accept": "application/json" }
+    });
+
     const body = await r.text();
     res.status(r.status);
     res.setHeader("content-type", r.headers.get("content-type") || "application/json");
