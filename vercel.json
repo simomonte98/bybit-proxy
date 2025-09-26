@@ -1,8 +1,4 @@
 {
   "version": 2,
-  "regions": ["sin1"],
-  "rewrites": [
-    { "source": "/v5/(.*)", "destination": "/api/proxy?path=$1" },
-    { "source": "/health", "destination": "/api/health" }
-  ]
+  "regions": ["sin1"]
 }
